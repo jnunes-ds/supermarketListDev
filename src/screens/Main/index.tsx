@@ -41,23 +41,29 @@ export function Main() {
         />
         <TouchableOpacity
           style={S.addButton}
-          onPress={() =>
-            dispatch({
-              type: 'ADD',
-              item: {
-                id: '1',
-                title: item,
-                check: false,
-              },
-            })
-          }>
+          onPress={async () => {
+            try {
+              dispatch({
+                type: 'ADD',
+                item: {
+                  id: '1',
+                  title: item,
+                  check: false,
+                },
+              });
+            } catch (error) {
+              console.error(error);
+            }
+          }}>
           <Text style={S.addButtonText}>+</Text>
         </TouchableOpacity>
       </View>
       <View>
         <FlatList
           data={state}
-          renderItem={({itm}) => <Text style={S.listItem}>{itm.title}</Text>}
+          renderItem={({item: itm}) => (
+            <Text style={S.listItem}>{itm.title}</Text>
+          )}
         />
       </View>
     </View>
