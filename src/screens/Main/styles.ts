@@ -16,6 +16,18 @@ const Style = StyleSheet.create({
     fontSize: 30,
     color: Colors.carbonDark,
   },
+  addButton: {
+    flex: 1,
+    width: '20%',
+    marginLeft: 2,
+    alignItems: 'center',
+    alignSelf: 'center',
+  },
+  addButtonText: {
+    textAlign: 'center',
+    color: Colors.danger,
+    fontSize: 60,
+  },
 });
 
 export default Style;
