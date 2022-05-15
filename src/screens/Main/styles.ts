@@ -24,15 +24,32 @@ const Style = StyleSheet.create({
     alignSelf: 'center',
   },
   addButtonText: {
-    textAlign: 'center',
+    textAlign: 'left',
     color: Colors.danger,
     fontSize: 60,
   },
   listItem: {
-    backgroundColor: Colors.secondary,
     fontSize: 22,
     marginVertical: 3,
     padding: 10,
+  },
+  listItemChecked: {
+    textDecorationLine: 'line-through',
+  },
+  itemsContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  removeItem: {
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    marginHorizontal: 10,
+  },
+  removeItemText: {
+    fontSize: 12,
+    color: Colors.danger,
   },
 });
 

@@ -9,21 +9,37 @@ interface DataProps {
   check: boolean;
 }
 
-type ActionType = 'ADD';
+enum ActionsEnum {
+  ADD = 'ADD',
+  REMOVE = 'REMOVE',
+  CHECK = 'CHECK',
+}
 
 interface IAction {
-  type: ActionType;
+  type: ActionsEnum;
   item: DataProps;
 }
 
 export function Main() {
-  const [item, setItem] = useState<string>('');
+  const [product, setProduct] = useState<string>('');
   const initialState: any[] = [];
 
   const reducer = (state: DataProps[], action: IAction) => {
     switch (action.type) {
-      case 'ADD':
+      case ActionsEnum.ADD:
         return [...state, action.item];
+      case ActionsEnum.CHECK:
+        return state.map(item => {
+          if (item.id === action.item.id) {
+            return {...item, check: !item.check};
+          } else {
+            return item;
+          }
+        });
+      case ActionsEnum.REMOVE:
+        return state.filter(item => {
+          return item.id !== action.item.id;
+        });
       default:
         return state;
     }
@@ -35,25 +51,25 @@ export function Main() {
     <View style={S.container}>
       <View style={S.inputContainer}>
         <TextInput
-          value={item}
-          onChangeText={setItem}
+          value={product}
+          onChangeText={setProduct}
           placeholder="Adicionar produto"
           style={S.input}
         />
         <TouchableOpacity
           style={S.addButton}
           onPress={async () => {
-            const newId = await uuid.v4(item);
+            const newId = await uuid.v4(product);
             try {
               dispatch({
-                type: 'ADD',
+                type: ActionsEnum.ADD,
                 item: {
                   id: newId as string,
-                  title: item,
+                  title: product,
                   check: false,
                 },
               });
-              setItem('');
+              setProduct('');
             } catch (error) {
               console.error(error);
             }
@@ -64,8 +80,24 @@ export function Main() {
       <View>
         <FlatList
           data={state}
-          renderItem={({item: itm}) => (
-            <Text style={S.listItem}>{itm.title}</Text>
+          renderItem={({item}) => (
+            <View style={S.itemsContainer}>
+              <TouchableOpacity
+                onPress={() => {
+                  dispatch({type: ActionsEnum.CHECK, item});
+                }}>
+                <Text style={[S.listItem, item.check && S.listItemChecked]}>
+                  {item.title}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  dispatch({type: ActionsEnum.REMOVE, item});
+                }}
+                style={S.removeItem}>
+                <Text style={S.removeItemText}>Remover</Text>
+              </TouchableOpacity>
+            </View>
           )}
         />
       </View>
