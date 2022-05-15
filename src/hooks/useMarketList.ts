@@ -1,5 +1,6 @@
 import {useReducer} from 'react';
 import uuid from 'react-native-uuid';
+import SInfo from 'react-native-sensitive-info';
 
 export interface DataProps {
   id: string;
@@ -18,24 +19,54 @@ export interface IAction {
   item: DataProps;
 }
 
+interface IReducerActions {
+  addItem(item: DataProps, state: DataProps[]): DataProps[];
+  checkItem(item: DataProps, state: DataProps[]): DataProps[];
+  removeItem(item: DataProps, state: DataProps[]): DataProps[];
+}
+
+class ReducerActions implements IReducerActions {
+  // Declaring Methods
+  addItem(_item: DataProps, _state: DataProps[]): DataProps[] {
+    throw new Error('Method not implemented.');
+  }
+  checkItem(_item: DataProps, _state: DataProps[]): DataProps[] {
+    throw new Error('Method not implemented.');
+  }
+  removeItem(_item: DataProps, _state: DataProps[]): DataProps[] {
+    throw new Error('Method not implemented.');
+  }
+
+  // Implementing Methods
+  public static addItem(item: DataProps, state: DataProps[]): DataProps[] {
+    return [...state, item];
+  }
+  public static checkItem(item: DataProps, state: DataProps[]): DataProps[] {
+    return state.map(itm => {
+      if (itm.id === item.id) {
+        return {...itm, check: !itm.check};
+      } else {
+        return itm;
+      }
+    });
+  }
+  public static removeItem(item: DataProps, state: DataProps[]): DataProps[] {
+    return state.filter(itm => {
+      return itm.id !== item.id;
+    });
+  }
+}
+
 const initialState: any[] = [];
 
 const reducer = (state: DataProps[], action: IAction) => {
   switch (action.type) {
     case ActionsEnum.ADD:
-      return [...state, action.item];
+      return ReducerActions.addItem(action.item, state);
     case ActionsEnum.CHECK:
-      return state.map(item => {
-        if (item.id === action.item.id) {
-          return {...item, check: !item.check};
-        } else {
-          return item;
-        }
-      });
+      return ReducerActions.checkItem(action.item, state);
     case ActionsEnum.REMOVE:
-      return state.filter(item => {
-        return item.id !== action.item.id;
-      });
+      return ReducerActions.removeItem(action.item, state);
     default:
       return state;
   }
