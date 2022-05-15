@@ -8,7 +8,7 @@ const Colors = {
   dark: '#34495e',
   background: '#ffffff',
 
-  dev: '#f37272',
+  devSamurai: '#f37272',
 };
 
 export default Colors;
