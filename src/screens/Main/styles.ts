@@ -5,6 +5,7 @@ const Style = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.background,
+    paddingHorizontal: 7,
   },
   inputContainer: {
     flexDirection: 'row',
@@ -12,14 +13,13 @@ const Style = StyleSheet.create({
     marginTop: Platform.OS === 'ios' ? 100 : 10,
   },
   input: {
+    flex: 1,
     width: '80%',
     fontSize: 30,
     color: Colors.carbonDark,
   },
   addButton: {
-    flex: 1,
-    width: '20%',
-    marginLeft: 2,
+    marginHorizontal: 5,
     alignItems: 'center',
     alignSelf: 'center',
   },
@@ -27,6 +27,12 @@ const Style = StyleSheet.create({
     textAlign: 'center',
     color: Colors.danger,
     fontSize: 60,
+  },
+  listItem: {
+    backgroundColor: Colors.secondary,
+    fontSize: 22,
+    marginVertical: 3,
+    padding: 10,
   },
 });
 
