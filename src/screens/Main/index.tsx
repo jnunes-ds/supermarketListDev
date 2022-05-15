@@ -1,6 +1,7 @@
 import React, {useState, useReducer} from 'react';
 import {FlatList, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import S from './styles';
+import uuid from 'react-native-uuid';
 
 interface DataProps {
   id: string;
@@ -42,15 +43,17 @@ export function Main() {
         <TouchableOpacity
           style={S.addButton}
           onPress={async () => {
+            const newId = await uuid.v4(item);
             try {
               dispatch({
                 type: 'ADD',
                 item: {
-                  id: '1',
+                  id: newId as string,
                   title: item,
                   check: false,
                 },
               });
+              setItem('');
             } catch (error) {
               console.error(error);
             }
