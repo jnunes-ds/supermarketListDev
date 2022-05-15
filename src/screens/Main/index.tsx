@@ -57,7 +57,7 @@ export function Main() {
       <View>
         <FlatList
           data={state}
-          renderItem={({item}) => <Text style={S.listItem}>{item.title}</Text>}
+          renderItem={({itm}) => <Text style={S.listItem}>{itm.title}</Text>}
         />
       </View>
     </View>
