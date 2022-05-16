@@ -8,7 +8,8 @@ describe(':::::Main screen:::::', () => {
     const inputElemente = getByTestId('input');
     expect(inputElemente).toBeTruthy();
   });
-  it('Input should have text', async () => {
+
+  it('Should render new task', async () => {
     const {getByTestId, getByText} = render(<Main />);
     const inputElemente = getByTestId('input');
     const plusButtonElement = getByTestId('plus-button');
