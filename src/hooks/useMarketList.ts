@@ -12,6 +12,7 @@ export enum ActionsEnum {
   ADD = 'ADD',
   REMOVE = 'REMOVE',
   CHECK = 'CHECK',
+  RESCUE = 'RESCUE',
 }
 
 export interface IAction {
@@ -20,14 +21,22 @@ export interface IAction {
 }
 
 interface IReducerActions {
-  addItem(item: DataProps, state: DataProps[]): DataProps[];
+  addItem(item: DataProps, state: DataProps[]): Promise<DataProps[]>;
   checkItem(item: DataProps, state: DataProps[]): DataProps[];
   removeItem(item: DataProps, state: DataProps[]): DataProps[];
+  rescueItems(): Promise<string>;
 }
+
+const SaveStateOnDB = async (newState: DataProps[]) => {
+  return SInfo.setItem('key1', JSON.stringify(newState), {
+    sharedPreferencesName: 'mySharedPrefs',
+    keychainService: 'myKeychain',
+  });
+};
 
 class ReducerActions implements IReducerActions {
   // Declaring Methods
-  addItem(_item: DataProps, _state: DataProps[]): DataProps[] {
+  addItem(_item: DataProps, _state: DataProps[]): Promise<DataProps[]> {
     throw new Error('Method not implemented.');
   }
   checkItem(_item: DataProps, _state: DataProps[]): DataProps[] {
@@ -36,10 +45,15 @@ class ReducerActions implements IReducerActions {
   removeItem(_item: DataProps, _state: DataProps[]): DataProps[] {
     throw new Error('Method not implemented.');
   }
+  rescueItems(): Promise<string> {
+    throw new Error('Method not implemented.');
+  }
 
   // Implementing Methods
   public static addItem(item: DataProps, state: DataProps[]): DataProps[] {
-    return [...state, item];
+    const newState = state && state.length ? [...state, item] : [item];
+    SaveStateOnDB(newState);
+    return newState;
   }
   public static checkItem(item: DataProps, state: DataProps[]): DataProps[] {
     return state.map(itm => {
@@ -55,6 +69,13 @@ class ReducerActions implements IReducerActions {
       return itm.id !== item.id;
     });
   }
+
+  public static async rescueItems(): Promise<string> {
+    return await SInfo.getItem('key1', {
+      sharedPreferencesName: 'mySharedPrefs',
+      keychainService: 'myKeychain',
+    });
+  }
 }
 
 const initialState: any[] = [];
@@ -67,6 +88,8 @@ const reducer = (state: DataProps[], action: IAction) => {
       return ReducerActions.checkItem(action.item, state);
     case ActionsEnum.REMOVE:
       return ReducerActions.removeItem(action.item, state);
+    case ActionsEnum.RESCUE:
+      return ReducerActions.rescueItems();
     default:
       return state;
   }
@@ -101,7 +124,13 @@ function useMarketList() {
     });
   };
 
-  return [state, addItem, checkItem, removeItem];
+  const rescueItems = () => {
+    dispatch({
+      type: ActionsEnum.RESCUE,
+    });
+  };
+
+  return [state, addItem, checkItem, removeItem, rescueItems];
 }
 
 export default useMarketList;
